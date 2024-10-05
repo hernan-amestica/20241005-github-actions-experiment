@@ -1,19 +1,28 @@
-name: GitHub Actions Experiment
+name: Deploy to GitHub Pages
+
 on:
   push:
-    branches: [master]
-  jobs:
-    setup:
-      runs-on: ubuntu-lastest
-      steps:
-        - run: ./setup_server.sh
-    build:
-      needs: setup
-      runs-on: ubuntu-lastest
-      steps:
-        - run: ./build_server.sh
-    test:
-      needs: build
-      runs-on: ubuntu-lastest
-      steps:
-        - run: ./test_server.sh
+    branches:
+      - main  # Cambia esto si tu rama principal es diferente
+
+permissions:
+  contents: write  # Permitir escribir en los contenidos del repositorio
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build the project
+        run: |
+          mkdir -p dist
+          cp -r src/* dist/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
