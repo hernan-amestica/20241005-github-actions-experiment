@@ -1,0 +1,19 @@
+name: GitHub Actions Experiment
+on:
+  push:
+    branches: [master]
+  jobs:
+    setup:
+      runs-on: ubuntu-lastest
+      steps:
+        - run: ./setup_server.sh
+    build:
+      needs: setup
+      runs-on: ubuntu-lastest
+      steps:
+        - run: ./build_server.sh
+    test:
+      needs: build
+      runs-on: ubuntu-lastest
+      steps:
+        - run: ./test_server.sh
